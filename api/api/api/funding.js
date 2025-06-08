@@ -1,11 +1,18 @@
 export default async function handler(req, res) {
-  const url = "https://fapi.binance.com/fapi/v1/fundingRate?symbol=BTCUSDT&limit=1";
+  const url = "https://api.bybit.com/v5/market/funding/prev-funding-rate?symbol=BTCUSDT";
 
   try {
     const response = await fetch(url);
-    const data = await response.json();
+    const result = await response.json();
+
+    const data = {
+      symbol: result.result.symbol,
+      fundingRate: result.result.fundingRate,
+      fundingTime: result.result.fundingRateTimestamp
+    };
+
     res.status(200).json(data);
   } catch (error) {
-    res.status(500).json({ error: "API request failed" });
+    res.status(500).json({ error: "Bybit API request failed" });
   }
 }
